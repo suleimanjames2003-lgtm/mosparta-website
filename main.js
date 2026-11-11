@@ -121,5 +121,24 @@ var PIXEL_ID = '';
     });
   });
 
+
+  /* ---------- home hero: grid glow under mouse + pause flow off-screen ---------- */
+  var hh = d.querySelector('.home-hero');
+  if (hh) {
+    var raf = 0;
+    hh.addEventListener('pointermove', function (e) {
+      if (raf) return;
+      raf = requestAnimationFrame(function () {
+        var r = hh.getBoundingClientRect();
+        hh.style.setProperty('--gx', (e.clientX - r.left) + 'px');
+        hh.style.setProperty('--gy', (e.clientY - r.top) + 'px');
+        raf = 0;
+      });
+    });
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) {
+      hh.classList.toggle('paused', !es[0].isIntersecting);
+    }).observe(hh);
+  }
+
   var y = d.getElementById('yr'); if (y) y.textContent = new Date().getFullYear();
 })();
